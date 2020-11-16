@@ -6,6 +6,7 @@ import com.fasterxml.jackson.annotation.JsonSubTypes;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.Inheritance;
@@ -32,20 +33,17 @@ import org.hibernate.annotations.GenericGenerator;
 @NoArgsConstructor
 
 @Entity
-@Inheritance(strategy=InheritanceType.JOINED)
+@Inheritance(strategy = InheritanceType.JOINED)
 public abstract class AbstractFieldDefinition<T> {
     @Id
     @GeneratedValue(generator = "uuid")
     @GenericGenerator(name = "uuid", strategy = "uuid2")
-    @Column()
+    @Column
     private String id;
-//    @GeneratedValue(strategy = GenerationType.IDENTITY)
-//    @Column (name = "dict_id")
-//    private Integer dictionaryId;
     @Column
     private String name;
-    @ManyToOne
-//    @JoinColumn(name="id", nullable=false)
+    @ToString.Exclude
+    @ManyToOne(fetch = FetchType.LAZY)
     private DictionaryDefinition dict;
 
     public abstract T getPresetValue();

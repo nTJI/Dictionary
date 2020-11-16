@@ -30,9 +30,10 @@ public class FieldDefinitionController {
     }
 
     @PostMapping("/post")
-    public void getData(@RequestBody DictionaryDefinition dictionaryDefinition) {
+    public String getData(@RequestBody DictionaryDefinition dictionaryDefinition) {
 
         System.out.println(1);
         dictionaryDefinitionService.save(dictionaryDefinition);
+        return "createDict";
     }
 }

@@ -9,12 +9,6 @@ spring:
   flyway:
     baselineOnMigrate: true
 
-
   jpa:
     hibernate:
       ddl-auto: create
-
-
-  hbm2ddl:
-    auto: create
-

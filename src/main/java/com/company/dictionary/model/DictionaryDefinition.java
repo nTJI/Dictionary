@@ -2,7 +2,6 @@ package com.company.dictionary.model;
 
 import com.company.dictionary.model.field.AbstractFieldDefinition;
 import java.util.List;
-import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -29,6 +28,6 @@ public class DictionaryDefinition {
     private Long id;
     @Column
     private String name;
-    @OneToMany(mappedBy = "dict", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "dict")
     private List<AbstractFieldDefinition> fieldDefinitions;
-} 
+}
