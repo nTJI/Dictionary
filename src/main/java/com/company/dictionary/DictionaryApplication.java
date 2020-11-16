@@ -1,6 +1,6 @@
 package com.company.dictionary;
 
-import com.company.dictionary.repository.FieldRepository;
+import com.company.dictionary.repository.DictionaryDefinitionRepository;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -14,16 +14,9 @@ public class DictionaryApplication {
     }
 
     @Bean
-    public CommandLineRunner getRunner(FieldRepository fieldRepository) {
+    public CommandLineRunner getRunner(DictionaryDefinitionRepository dictionaryDefinitionRepository) {
         return a -> {
 
-//            fieldRepository.save(new StringFieldDefinition()
-//                    .setId("myId")
-//                    .setName("myName")
-//                    .setPresetValue("setPresetValue"));
-//            Iterable<AbstractFieldDefinition> all = fieldRepository.findAll();
-//            all.forEach(System.out::println);
-//            System.out.println(all);
         };
     }
 

@@ -12,11 +12,6 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 
-//@Entity
-//@DiscriminatorValue("boolean")
-//@ToString(callSuper = true)
-//@JsonTypeName("radiobutton") // todo
-
 @Entity
 @NoArgsConstructor
 @Getter

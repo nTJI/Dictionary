@@ -1,9 +1,7 @@
 package com.company.dictionary.controller;
 
 import com.company.dictionary.model.DictionaryDefinition;
-import com.company.dictionary.model.field.AbstractFieldDefinition;
-import com.company.dictionary.service.FieldDefinitionService;
-import java.util.List;
+import com.company.dictionary.service.DictionaryDefinitionService;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -14,10 +12,10 @@ import org.springframework.web.bind.annotation.RequestBody;
 //@RequestMapping("/")
 public class FieldDefinitionController {
 
-    private final FieldDefinitionService fieldDefinitionService;
+    private final DictionaryDefinitionService dictionaryDefinitionService;
 
-    public FieldDefinitionController(FieldDefinitionService fieldDefinitionService) {
-        this.fieldDefinitionService = fieldDefinitionService;
+    public FieldDefinitionController(DictionaryDefinitionService dictionaryDefinitionService) {
+        this.dictionaryDefinitionService = dictionaryDefinitionService;
     }
 
 
@@ -35,7 +33,6 @@ public class FieldDefinitionController {
     public void getData(@RequestBody DictionaryDefinition dictionaryDefinition) {
 
         System.out.println(1);
-//        fieldDefinitionService.save(dictionaryDefinition.getFieldDefinitions());
-//        System.out.println(fieldDefinitions);
+        dictionaryDefinitionService.save(dictionaryDefinition);
     }
 }
