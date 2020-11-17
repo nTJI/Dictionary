@@ -4,6 +4,8 @@ import com.company.dictionary.model.DictionaryDefinition;
 import com.company.dictionary.repository.DictionaryDefinitionRepository;
 import com.company.dictionary.repository.FieldDefinitionRepository;
 import com.company.dictionary.service.DictionaryDefinitionService;
+import java.util.List;
+import java.util.Optional;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -25,6 +27,15 @@ public class DictionaryDefinitionServiceImpl implements DictionaryDefinitionServ
 
         dictionaryDefinitionRepository.save(dictionaryDefinition);
         fieldDefinitionRepository.saveAll(dictionaryDefinition.getFieldDefinitions());
-        System.out.println(dictionaryDefinition);
+    }
+
+    @Override
+    public List<DictionaryDefinition> getAllDictionaries() {
+        return dictionaryDefinitionRepository.findAll();
+    }
+
+    @Override
+    public Optional<DictionaryDefinition> getDictionaryById(Long id) {
+        return dictionaryDefinitionRepository.findById(id);
     }
 }

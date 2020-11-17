@@ -9,7 +9,6 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 
 @Controller
-//@RequestMapping("/")
 public class FieldDefinitionController {
 
     private final DictionaryDefinitionService dictionaryDefinitionService;
@@ -31,9 +30,7 @@ public class FieldDefinitionController {
 
     @PostMapping("/post")
     public String getData(@RequestBody DictionaryDefinition dictionaryDefinition) {
-
-        System.out.println(1);
         dictionaryDefinitionService.save(dictionaryDefinition);
-        return "createDict";
+        return "createDict"; // todo
     }
 }

@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Add CSS and JS to Thymeleaf</title>
+
+</head>
+<body>
+
+<div class="container">
+    <table>
+        <tr>
+            <th>ID</th>
+            <th>Name</th>
+        </tr>
+            <tr th:each="dict : ${dicts}" >
+<!--                <td th:text="${dict.id}"/>-->
+                <td><a th:href="@{/dicts/${dict.id}}" th:text="${dict.id}"></a></td>
+                <td><a th:href="@{/dicts/${dict.id}}" th:text="${dict.name}"></a></td>
+
+            </tr>
+
+
+    </table>
+</div>
+</body>
+
+</html>
