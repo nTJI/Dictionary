@@ -33,6 +33,6 @@ public class StringFieldDefinition extends AbstractFieldDefinition<String> {
         return new StringFieldValue()
                 .setName(getName())
                 .setDict(dictionaryValue)
-                .setPresetValue(getPresetValue());
+                .setValue(getPresetValue());
     }
 }

@@ -37,7 +37,7 @@ public abstract class AbstractFieldValue<T> {
     @ManyToOne(fetch = FetchType.LAZY)
     private DictionaryValue dict;
 
-    public abstract T getPresetValue();
+    public abstract T getValue();
 
-    public abstract AbstractFieldValue<T> setPresetValue(T presetValue);
+    public abstract AbstractFieldValue<T> setValue(T value);
 }

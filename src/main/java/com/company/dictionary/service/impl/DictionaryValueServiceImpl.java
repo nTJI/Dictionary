@@ -4,6 +4,8 @@ import com.company.dictionary.model.DictionaryValue;
 import com.company.dictionary.repository.value.DictionaryValueRepository;
 import com.company.dictionary.repository.value.FieldValueRepository;
 import com.company.dictionary.service.DictionaryValueService;
+import java.util.List;
+import java.util.Optional;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -25,5 +27,10 @@ public class DictionaryValueServiceImpl implements DictionaryValueService {
         fieldValueRepository.saveAll(dictionaryValue.getFieldValues());
 
         System.out.println(1);
+    }
+
+    @Override
+    public List<DictionaryValue> getDictionaryByName(String name) {
+        return dictionaryValueRepository.findAllByName(name);
     }
 }

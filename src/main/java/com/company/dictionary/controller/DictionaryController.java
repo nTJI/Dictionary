@@ -5,6 +5,7 @@ import com.company.dictionary.model.DictionaryValue;
 import com.company.dictionary.model.value.AbstractFieldValue;
 import com.company.dictionary.service.DictionaryDefinitionService;
 import com.company.dictionary.service.DictionaryValueService;
+import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -36,22 +37,21 @@ public class DictionaryController {
 
     @GetMapping("/dicts/{id}")
     public String getDictInfo(@PathVariable("id") Long id, Model model) {
-        //todo
         Optional<DictionaryDefinition> dictionaryById = dictionaryDefinitionService.getDictionaryById(id);
-        DictionaryValue dictionaryValue = dictionaryById.map(d -> {
-            DictionaryValue v = conversionService.convert(d, DictionaryValue.class);
-            List<AbstractFieldValue> abstractFieldValues = d.getFieldDefinitions().stream()
-                    .map(fd -> fd.convertToValue(v))
-                    .collect(Collectors.toList());
-            v.setFieldValues(abstractFieldValues);
-            return v;
-        }).orElse(null);
+        DictionaryValue newDictValue = dictionaryDefinitionService.convertToDictValue(dictionaryById)
+                .orElse(null);
+        List<DictionaryValue> allDictValues = dictionaryValueService.getDictionaryByName(newDictValue.getName());
+        List<List<AbstractFieldValue>> fieldValues = allDictValues.stream().map(dv -> dv.getFieldValues()).collect(Collectors.toList());
+        List<String> fieldNames = allDictValues.stream()
+                .map(dv ->
+                        dv.getFieldValues().stream()
+                                .map(fv -> fv.getName())
+                                .collect(Collectors.toList())).findFirst().orElse(null);
 
-
-        dictionaryValueService.save(dictionaryValue);
-
-//        model.addAttribute("dictionary", dictionaryValue);
-
+//        model.addAttribute("dictValues", allDictValues);
+        model.addAttribute("fieldNames", fieldNames);
+        model.addAttribute("fieldValues", fieldValues);
+        model.addAttribute("emptyValue", newDictValue);
 
         return "dictEdit";
     }

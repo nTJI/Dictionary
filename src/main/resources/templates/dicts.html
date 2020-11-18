@@ -13,12 +13,11 @@
             <th>ID</th>
             <th>Name</th>
         </tr>
-            <tr th:each="dict : ${dicts}" >
-<!--                <td th:text="${dict.id}"/>-->
-                <td><a th:href="@{/dicts/${dict.id}}" th:text="${dict.id}"></a></td>
-                <td><a th:href="@{/dicts/${dict.id}}" th:text="${dict.name}"></a></td>
+        <tr th:each="dict : ${dicts}">
+            <td><a th:href="${'/dicts/' + dict.id}" th:text="${dict.id}">ID</a></td>
+            <td><a th:href="${'/dicts/' + dict.id}" th:text="${dict.name}">Name</a></td>
 
-            </tr>
+        </tr>
 
 
     </table>

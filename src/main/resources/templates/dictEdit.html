@@ -8,20 +8,39 @@
 <body>
 
 <div class="container">
+    <h1 th:text="${emptyValue.name}">DictName</h1>
+    <!--        <div class="dictValueItem" th:each="dictValue,dictIter : ${dictValues}">-->
+    <!--            <table>-->
+    <!--                <caption th:text="${dictIter.index}">Index</caption>-->
+    <!--                <tr th:each="fieldValue,iter : ${dictValue.fieldValues}">-->
+    <!--                    <td th:text="${fieldValue.name}" ></td>-->
+    <!--                    <td th:text="${fieldValue.getValue()}"></td>-->
+    <!--                </tr>-->
+    <!--            </table>-->
+    <!--        </div>-->
+
     <table>
         <tr>
-            <th>ID</th>
-            <th>Name</th>
+            <td th:each="fieldName : ${fieldNames}">
+                <p th:text="${fieldName}"></p>
+            </td>
         </tr>
-<!--            <tr th:each="dict : ${dicts}" >-->
-<!--&lt;!&ndash;                <td th:text="${dict.id}"/>&ndash;&gt;-->
-<!--                <td><a th:href="@{/dicts/${dict.id}}" th:text="${dict.id}"></a></td>-->
-<!--                <td><a th:href="@{/dicts/${dict.id}}" th:text="${dict.name}"></a></td>-->
-
-<!--            </tr>-->
 
 
+        <tr th:each="fieldValue : ${fieldValues}">
+            <div th:each="value : ${fieldValue}">
+                <td th:text="${value.getValue()}"></td>
+            </div>
+        </tr>
     </table>
+    <!--            <tr th:each="dict : ${dicts}" >-->
+    <!--&lt;!&ndash;                <td th:text="${dict.id}"/>&ndash;&gt;-->
+    <!--                <td><a th:href="@{/dicts/${dict.id}}" th:text="${dict.id}"></a></td>-->
+    <!--                <td><a th:href="@{/dicts/${dict.id}}" th:text="${dict.name}"></a></td>-->
+
+    <!--            </tr>-->
+
+
 </div>
 </body>
 

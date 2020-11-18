@@ -12,16 +12,16 @@ import lombok.Setter;
 @Setter
 public class StringFieldValue extends AbstractFieldValue<String> {
     @Column
-    private String presetValue;
+    private String value;
 
     @Override
-    public String getPresetValue() {
-        return presetValue;
+    public String getValue() {
+        return value;
     }
 
     @Override
-    public StringFieldValue setPresetValue(String presetValue) {
-        this.presetValue = presetValue;
+    public StringFieldValue setValue(String value) {
+        this.value = value;
         return this;
     }
 }
