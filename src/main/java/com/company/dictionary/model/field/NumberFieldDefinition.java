@@ -1,10 +1,13 @@
 package com.company.dictionary.model.field;
 
+import com.company.dictionary.model.DictionaryValue;
+import com.company.dictionary.model.value.AbstractFieldValue;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.hibernate.cfg.NotYetImplementedException;
 
 @Entity
 @NoArgsConstructor
@@ -23,5 +26,11 @@ public class NumberFieldDefinition extends AbstractFieldDefinition<Double> {
     public NumberFieldDefinition setPresetValue(Double presetValue) {
         this.presetValue = presetValue;
         return this;
+    }
+
+    //todo
+    @Override
+    public AbstractFieldValue convertToValue(DictionaryValue dictionaryValue) {
+        throw new NotYetImplementedException();
     }
 }

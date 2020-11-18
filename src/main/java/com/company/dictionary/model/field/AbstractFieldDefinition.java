@@ -2,6 +2,9 @@ package com.company.dictionary.model.field;
 
 
 import com.company.dictionary.model.DictionaryDefinition;
+import com.company.dictionary.model.DictionaryValue;
+import com.company.dictionary.model.value.AbstractFieldValue;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonSubTypes;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import javax.persistence.Column;
@@ -43,10 +46,13 @@ public abstract class AbstractFieldDefinition<T> {
     @Column
     private String name;
     @ToString.Exclude
+    @JsonIgnore
     @ManyToOne(fetch = FetchType.LAZY)
     private DictionaryDefinition dict;
 
     public abstract T getPresetValue();
 
     public abstract AbstractFieldDefinition<T> setPresetValue(T presetValue);
+
+    public abstract AbstractFieldValue convertToValue(DictionaryValue dictionaryValue);
 }
