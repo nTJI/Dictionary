@@ -6,5 +6,8 @@ import java.util.Optional;
 
 public interface DictionaryValueService {
     void save(DictionaryValue dictionaryValue);
+
     List<DictionaryValue> getDictionaryByName(String name);
+
+    boolean dropById(Long id);
 }

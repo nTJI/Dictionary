@@ -7,6 +7,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 @Controller
 public class FieldDefinitionController {
@@ -29,8 +30,9 @@ public class FieldDefinitionController {
     }
 
     @PostMapping("/post")
-    public String getData(@RequestBody DictionaryDefinition dictionaryDefinition) {
+    @ResponseBody
+    public String getData(@RequestBody DictionaryDefinition dictionaryDefinition, Model model) {
         dictionaryDefinitionService.save(dictionaryDefinition);
-        return "createDict"; // todo
+        return "redirect to dicts";
     }
 }

@@ -55,4 +55,13 @@ public class DictionaryController {
 
         return "dictEdit";
     }
+
+    @GetMapping("/dicts/{id}/drop")
+    public String dropDictValue(@PathVariable("id") Long id, Model model) {
+        dictionaryValueService.dropById(id);
+
+        model.addAttribute("dicts", dictionaryDefinitionService.getAllDictionaries());
+        return "redirect:/dicts";
+    }
+
 }

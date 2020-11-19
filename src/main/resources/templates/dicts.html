@@ -3,11 +3,12 @@
 <head>
     <meta charset="UTF-8">
     <title>Dictionary list</title>
+    <link th:href="@{/styles/createDict.css}" rel="stylesheet"/>
 
 </head>
 <body>
 
-<div class="container">
+<div>
     <table>
         <tr>
             <th>ID</th>
@@ -16,6 +17,7 @@
         <tr th:each="dict : ${dicts}">
             <td><a th:href="${'/dicts/' + dict.id}" th:text="${dict.id}">ID</a></td>
             <td><a th:href="${'/dicts/' + dict.id}" th:text="${dict.name}">Name</a></td>
+            <td><a th:href="${'/dicts/' + dict.id + '/drop'}" th:text="[x]" class="drop">Name</a></td>
 
         </tr>
 

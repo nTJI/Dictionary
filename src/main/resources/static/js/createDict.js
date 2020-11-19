@@ -16,7 +16,6 @@ function drop(ev) {
 }
 
 function createFieldDeclaration(id) {
-    console.log(id);
     // document.getElementById("target").appendChild();
     var div = document.createElement("div");
     div.className = "block";
@@ -28,10 +27,9 @@ function createObjectForType(id) {
     var obj = {
         hidden: id,
         id: id + (fields.length + 1),
-        name: "name",
-        presetValue: "presetValue"
+        name: "",
+        presetValue: ""
     }
-    console.log(id)
     return obj;
 }
 
@@ -40,7 +38,11 @@ function updateTargetDiv() {
     target.innerHTML = "";
     fields.forEach(e => {
         var div = document.createElement("div");
-        div.className = "myDiv"
+        div.className = "myDiv";
+
+        var h3 = document.createElement("h3");
+        h3.innerText = e.hidden;
+        div.appendChild(h3);
 
         // ID
         var input = document.createElement("input");
@@ -51,6 +53,7 @@ function updateTargetDiv() {
         var label = document.createElement("label");
         label.innerText = "Id"
         div.appendChild(label);
+        div.appendChild(document.createElement("br"));
         div.appendChild(input);
         div.appendChild(document.createElement("br"));
 
@@ -63,21 +66,13 @@ function updateTargetDiv() {
         var label = document.createElement("label");
         label.innerText = "Name"
         div.appendChild(label);
+        div.appendChild(document.createElement("br"));
         div.appendChild(input);
         div.appendChild(document.createElement("br"));
 
 
         //PresetValue
-        var input = document.createElement("input");
-        input.id = e.id + "_presetValue";
-        input.className = "presetValue"
-        input.value = e.presetValue;
-
-        var label = document.createElement("label");
-        label.innerText = "Preset value"
-        div.appendChild(label);
-        div.appendChild(input);
-        div.appendChild(document.createElement("br"));
+        preparePresetFieldDefinition(e, div);
 
 
         // HIDDEN
@@ -91,11 +86,63 @@ function updateTargetDiv() {
     })
 }
 
+function preparePresetFieldDefinition(e, div) {
+    //PresetValue
+    if (e.hidden === "text") {
+        var input = document.createElement("input");
+        input.id = e.id + "_presetValue";
+        input.className = "presetValue"
+        input.value = e.presetValue;
+
+        var label = document.createElement("label");
+        label.innerText = "Preset value"
+        div.appendChild(label);
+        div.appendChild(document.createElement("br"));
+        div.appendChild(input);
+        div.appendChild(document.createElement("br"));
+    } else if (e.hidden === "number") {
+        var input = document.createElement("input");
+        input.id = e.id + "_presetValue";
+        input.className = "presetValue"
+        input.value = e.presetValue;
+        setInputFilter(input, function(value) {
+            return /^\d*\.?\d*$/.test(value); // Allow digits and '.' only, using a RegExp
+        });
+
+        var label = document.createElement("label");
+        label.innerText = "Preset value"
+        div.appendChild(label);
+        div.appendChild(document.createElement("br"));
+        div.appendChild(input);
+        div.appendChild(document.createElement("br"));
+    }
+
+
+}
+
+// Restricts input for the given textbox to the given inputFilter function.
+function setInputFilter(textbox, inputFilter) {
+    ["input", "keydown", "keyup", "mousedown", "mouseup", "select", "contextmenu", "drop"].forEach(function(event) {
+        textbox.addEventListener(event, function() {
+            if (inputFilter(this.value)) {
+                this.oldValue = this.value;
+                this.oldSelectionStart = this.selectionStart;
+                this.oldSelectionEnd = this.selectionEnd;
+            } else if (this.hasOwnProperty("oldValue")) {
+                this.value = this.oldValue;
+                this.setSelectionRange(this.oldSelectionStart, this.oldSelectionEnd);
+            } else {
+                this.value = "";
+            }
+        });
+    });
+}
+
 function save() {
     fields = [];
     var target = document.getElementById("target");
     var divs = target.getElementsByClassName("myDiv");
-    Array.prototype.forEach.call(divs, function(div) {
+    Array.prototype.forEach.call(divs, function (div) {
 
         let id = div.getElementsByClassName("id")[0];
         let name = div.getElementsByClassName("name")[0];
@@ -126,9 +173,12 @@ function post(fields) {
                 'Content-Type': 'application/json'
             },
             body: JSON.stringify(fields)
-        });
-        const content = await rawResponse.json();
-
-        console.log(content);
+        })
+            .then(function (response) {
+                if (response.status === 200) {
+                    // console.log(response)
+                    window.location.replace("../dicts");
+                }
+            });
     })();
 }
