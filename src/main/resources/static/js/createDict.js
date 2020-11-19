@@ -1,180 +1,134 @@
-var droppables = new Array();
-var itemBeingDragged = null;
-var mouseDownPoint = {x: 0, y: 0};
+var fields = [];
 
-function onDocumentMouseMove(mouseMoveEvent) {
-    var point = {x: mouseMoveEvent.pageX, y: mouseMoveEvent.pageY};
-
-    // Drag the draggable to this position
-    itemBeingDragged.dragTo(point);
-
-    // If there are any droppable elements at this position, notify them
-    for (var i = 0; i < droppables.length; i++) {
-        if (droppables[i].contains(point) && !droppables[i].isBeingDraggedOver) {
-            droppables[i].onDragEnter();
-        } else if (!droppables[i].contains(point) && droppables[i].isBeingDraggedOver) {
-            droppables[i].onDragExit();
-        }
-    }
+function allowDrop(ev) {
+    ev.preventDefault();
 }
 
-function onDocumentMouseUp(mouseUpEvent) {
-    // If any droppable is being dragged over, accept the drop
-    for (var i = 0; i < droppables.length; i++) {
-        if (droppables[i].isBeingDraggedOver) {
-            droppables[i].onDragDrop(itemBeingDragged);
-        }
-    }
-
-    // Reset the position of the item being dragged and clear out the document event handlers
-    itemBeingDragged.reset(mouseUpEvent);
+function drag(ev) {
+    ev.dataTransfer.setData("text", ev.target.id);
 }
 
-var Draggable = function(elementId) {
-    this.init(elementId);
-};
+function drop(ev) {
+    ev.preventDefault();
+    var data = ev.dataTransfer.getData("text");
+    createFieldDeclaration(data);
+    updateTargetDiv();
+}
 
-Draggable.prototype = {
-    init: function(element) {
-        if (typeof element === "string") element = document.getElementById(element);
+function createFieldDeclaration(id) {
+    console.log(id);
+    // document.getElementById("target").appendChild();
+    var div = document.createElement("div");
+    div.className = "block";
+    fields.push(createObjectForType(id))
+    document.getElementById("target").appendChild(div);
+}
 
-        this.element = element;
-        this.element.className += "draggable";
-
-        var self = this;
-
-        this.element.onmousedown = function(mouseDownEvent) {
-            this.style.zIndex = "1000";
-
-            itemBeingDragged = self;
-
-            mouseDownPoint.x = mouseDownEvent.pageX;
-            mouseDownPoint.y = mouseDownEvent.pageY;
-
-            document.onmousemove = onDocumentMouseMove;
-            document.onmouseup = onDocumentMouseUp;
-        };
-    },
-
-    // Called when the mouse is moved (after having been pressed on this element)
-    dragTo: function(point) {
-        this.element.style.left = (point.x - mouseDownPoint.x) + "px";
-        this.element.style.top = (point.y - mouseDownPoint.y) + "px";
-    },
-
-    // Called when the mouse is lifted (after having been pressed on this element)
-    reset: function() {
-        this.element.style.zIndex = "";
-        this.element.style.left = "";
-        this.element.style.top = "";
-
-        itemBeingDragged = null;
-
-        mouseDownPoint.x = 0;
-        mouseDownPoint.y = 0;
-
-        document.onmousemove = null;
-        document.onmouseup = null;
+function createObjectForType(id) {
+    var obj = {
+        hidden: id,
+        id: id + (fields.length + 1),
+        name: "name",
+        presetValue: "presetValue"
     }
-};
+    console.log(id)
+    return obj;
+}
 
-// customDragDrop is a custom function which will be called when a Draggable is dropped
-// on this Droppable; it is passed the Draggable that was dropped
-var Droppable = function(element, customDragDrop) {
-    this.init(element, customDragDrop);
-};
+function updateTargetDiv() {
+    var target = document.getElementById("target");
+    target.innerHTML = "";
+    fields.forEach(e => {
+        var div = document.createElement("div");
+        div.className = "myDiv"
 
-Droppable.prototype = {
-    init: function(element, customDragDrop) {
-        if (typeof element === "string") element = document.getElementById(element);
+        // ID
+        var input = document.createElement("input");
+        input.id = e.id;
+        input.className = "id"
+        input.value = e.id;
 
-        this.element = element;
-        this.isBeingDraggedOver = false;
-        this.customDragDrop = customDragDrop;
+        var label = document.createElement("label");
+        label.innerText = "Id"
+        div.appendChild(label);
+        div.appendChild(input);
+        div.appendChild(document.createElement("br"));
 
-        droppables.push(this);
-    },
+        // NAME
+        var input = document.createElement("input");
+        input.id = e.id + "_name";
+        input.className = "name"
+        input.value = e.name;
 
-    // Calculate the top-left coordinate of this element
-    position: function() {
-        var position = {x: this.element.offsetLeft, y: this.element.offsetTop};
+        var label = document.createElement("label");
+        label.innerText = "Name"
+        div.appendChild(label);
+        div.appendChild(input);
+        div.appendChild(document.createElement("br"));
 
-        var offsetParent = this.element.offsetParent;
-        while (offsetParent) {
-            position.x += offsetParent.offsetLeft;
-            position.y += offsetParent.offsetTop;
-            offsetParent = offsetParent.offsetParent;
-        }
 
-        return position;
-    },
+        //PresetValue
+        var input = document.createElement("input");
+        input.id = e.id + "_presetValue";
+        input.className = "presetValue"
+        input.value = e.presetValue;
 
-    // Calculate whether the given coordinate falls within this element's boundaries
-    contains: function(point) {
-        var topLeft = this.position();
-        var bottomRight = {
-            x: topLeft.x + this.element.offsetWidth,
-            y: topLeft.y + this.element.offsetHeight
-        };
+        var label = document.createElement("label");
+        label.innerText = "Preset value"
+        div.appendChild(label);
+        div.appendChild(input);
+        div.appendChild(document.createElement("br"));
 
-        return (
-            topLeft.x < point.x
-            && topLeft.y < point.y
-            && point.x < bottomRight.x
-            && point.y < bottomRight.y
-        );
-    },
 
-    // Called when an item is dragged into this element
-    onDragEnter: function() {
-        this.isBeingDraggedOver = true;
-        this.element.className += "dragOver";
-    },
+        // HIDDEN
+        var hidden = document.createElement("input")
+        hidden.type = "hidden";
+        hidden.value = e.hidden;
+        hidden.className = "hidden";
+        div.appendChild(hidden);
 
-    // Called when an item is dragged out of this element
-    onDragExit: function() {
-        this.isBeingDraggedOver = false;
-        this.element.className = this.element.className.replace(/\bdragOver\b/, "");
-    },
+        target.appendChild(div);
+    })
+}
 
-    // Called when an item is dropped on this element
-    onDragDrop: function(draggable) {
-        this.onDragExit();
-        this.customDragDrop(draggable);
-    }
-};
+function save() {
+    fields = [];
+    var target = document.getElementById("target");
+    var divs = target.getElementsByClassName("myDiv");
+    Array.prototype.forEach.call(divs, function(div) {
 
-window.onload = function() {
-    // custom data
-    var data = [
-        "String",
-        "Number",
-        "Checkbox",
-        "Radiobutton"
-    ];
-
-    var availableMetrics = document.getElementById("available_metrics_list");
-
-    for (var i = 0; i < data.length; i++) {
-        var liElement = document.createElement("li");
-        liElement.appendChild(document.createTextNode(data[i]));
-        availableMetrics.appendChild(liElement);
-        var liElementDraggable = new Draggable(liElement);
-    }
-
-    var availableMetricsDroppable = new Droppable(availableMetrics, function(draggable) {
-        if (this.element !== draggable.element.parentNode) {
-            this.element.appendChild(draggable.element);
-        }
+        let id = div.getElementsByClassName("id")[0];
+        let name = div.getElementsByClassName("name")[0];
+        let presetValue = div.getElementsByClassName("presetValue")[0];
+        let hidden = div.getElementsByClassName("hidden")[0];
+        fields.push({
+            id: id.value,
+            name: name.value,
+            presetValue: presetValue.value,
+            hidden: hidden.value
+        })
     });
 
-    var selectedMetricsDroppable = new Droppable("next_metric", function(draggable) {
-        if (this.element.parentNode !== draggable.element.parentNode) {
-            this.element.parentNode.insertBefore(draggable.element, this.element);
-        }
-    });
+    let name = document.getElementById("dictName").value;
+    var request = {
+        name: name,
+        fieldDefinitions: fields
+    }
+    post(request);
+}
 
-    new Droppable("remove_metric", function(draggable) {
-        availableMetricsDroppable.onDragDrop(draggable);
-    });
-};
+function post(fields) {
+    (async () => {
+        const rawResponse = await fetch('/post', {
+            method: 'POST',
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(fields)
+        });
+        const content = await rawResponse.json();
+
+        console.log(content);
+    })();
+}

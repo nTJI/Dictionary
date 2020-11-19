@@ -1,60 +1,21 @@
-#available_metrics_filter {
-    margin: 5px;
-    border: 1px solid gray;
-    padding: 5px;
-    background-color: rgb(230, 230, 230);
-}
-
-#available_metrics_list {
-    padding: 0px;
-    border: 1px solid gray;
+#source, #target {
+    float: left;
+    width: 500px;
+    height: 500px;
+    margin: 10px;
     padding: 10px;
-    background-color: white;
+    border: 1px solid black;
 }
-
-#available_metrics_list li {
-    margin-top: -1px;
-    border: 1px solid gray;
-    padding: 5px;
-    list-style-type: none;
-    background-color: white;
-}
-
-#selected_metrics_list {
-    margin: 5px;
-    border: 1px solid gray;
-    padding: 10px;
-    background-color: white;
-}
-
-#selected_metrics_list li {
-    margin-top: -1px;
-    border: 1px solid gray;
-    padding: 5px;
-    list-style-type: none;
-    background-color: white;
-}
-
-#selected_metrics_list li:last-child { border: 1px dotted gray; }
-
-#next_metric { color: gray; }
-
-#remove_metric {
-    margin: 5px;
-    border: 1px dotted gray;
-    padding: 5px;
-    color: gray;
-    text-align: center;
-    background-color: white;
-}
-
-.draggable {
-    position: relative;
-    cursor: default;
-}
-
-.dragOver { background-color: rgb(232, 232, 255) !important; }
 
 .container {
     display: flex;
+    flex-direction: row;
+}
+
+.link {
+    padding: 10px;
+    background-color: lavender;
+}
+.link:hover {
+    background-color: #efefff;
 }
