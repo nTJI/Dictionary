@@ -1,7 +1,5 @@
 package com.company.dictionary.model.value;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;

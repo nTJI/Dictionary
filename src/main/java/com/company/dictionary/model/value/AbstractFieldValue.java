@@ -2,20 +2,11 @@ package com.company.dictionary.model.value;
 
 
 import com.company.dictionary.model.DictionaryValue;
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
-import javax.persistence.Inheritance;
-import javax.persistence.InheritanceType;
-import javax.persistence.ManyToOne;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 import lombok.experimental.Accessors;
-import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.cfg.NotYetImplementedException;
 
 @Getter

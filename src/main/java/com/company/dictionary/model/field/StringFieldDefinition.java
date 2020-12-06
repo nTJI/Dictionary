@@ -5,7 +5,6 @@ import com.company.dictionary.model.value.AbstractFieldValue;
 import com.company.dictionary.model.value.StringFieldValue;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.function.Function;
 import lombok.Data;
 import lombok.SneakyThrows;
 
