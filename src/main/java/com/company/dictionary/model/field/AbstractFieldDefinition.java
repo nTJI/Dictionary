@@ -4,22 +4,17 @@ package com.company.dictionary.model.field;
 import com.company.dictionary.model.DictionaryDefinition;
 import com.company.dictionary.model.DictionaryValue;
 import com.company.dictionary.model.value.AbstractFieldValue;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonSubTypes;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
-import javax.persistence.Inheritance;
-import javax.persistence.InheritanceType;
-import javax.persistence.ManyToOne;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.function.Function;
+import lombok.Data;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
-import org.hibernate.annotations.GenericGenerator;
+import lombok.experimental.Accessors;
 
 @JsonTypeInfo(use = JsonTypeInfo.Id.NAME,
         include = JsonTypeInfo.As.PROPERTY, property = "hidden")
@@ -34,20 +29,10 @@ import org.hibernate.annotations.GenericGenerator;
 @Setter
 @ToString
 @NoArgsConstructor
-
-@Entity
-@Inheritance(strategy = InheritanceType.JOINED)
+@Accessors(chain = true)
 public abstract class AbstractFieldDefinition<T> {
-    @Id
-    @GeneratedValue(generator = "uuid")
-    @GenericGenerator(name = "uuid", strategy = "uuid2")
-    @Column
     private String id;
-    @Column
     private String name;
-    @ToString.Exclude
-    @JsonIgnore
-    @ManyToOne(fetch = FetchType.LAZY)
     private DictionaryDefinition dict;
 
     public abstract T getPresetValue();
@@ -55,4 +40,23 @@ public abstract class AbstractFieldDefinition<T> {
     public abstract AbstractFieldDefinition<T> setPresetValue(T presetValue);
 
     public abstract AbstractFieldValue convertToValue(DictionaryValue dictionaryValue);
+
+    public abstract String getCreateSql();
+
+    public abstract boolean isSupportedByType(String type);
+
+    public static AbstractFieldDefinition getByType(String type) {
+        StringFieldDefinition str = new StringFieldDefinition();
+        if (str.isSupportedByType(type)) {
+            return str;
+        }
+
+        NumberFieldDefinition num = new NumberFieldDefinition();
+        if (num.isSupportedByType(type)) {
+            return num;
+        }
+        return null;
+    }
+
+    public abstract T getResultForColumn(ResultSet rs, String name) throws SQLException;
 }

@@ -8,9 +8,9 @@ import java.util.Optional;
 public interface DictionaryDefinitionService {
     void save(DictionaryDefinition dictionaryDefinition);
 
-    List<DictionaryDefinition> getAllDictionaries();
+    List<String> getAllDictionaries();
 
-    Optional<DictionaryDefinition> getDictionaryById(Long id);
+    Optional<DictionaryDefinition> getDictionaryByName(String name);
 
     Optional<DictionaryValue> convertToDictValue(Optional<DictionaryDefinition> dictionaryDefinition);
 }

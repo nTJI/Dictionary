@@ -5,7 +5,6 @@ import com.company.dictionary.model.DictionaryValue;
 import com.company.dictionary.model.value.AbstractFieldValue;
 import com.company.dictionary.service.DictionaryDefinitionService;
 import com.company.dictionary.service.DictionaryValueService;
-import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -35,13 +34,15 @@ public class DictionaryController {
         return "dicts";
     }
 
-    @GetMapping("/dicts/{id}")
-    public String getDictInfo(@PathVariable("id") Long id, Model model) {
-        Optional<DictionaryDefinition> dictionaryById = dictionaryDefinitionService.getDictionaryById(id);
+    @GetMapping("/dicts/{name}")
+    public String getDictInfo(@PathVariable("name") String name, Model model) {
+        Optional<DictionaryDefinition> dictionaryById = dictionaryDefinitionService.getDictionaryByName(name);
         DictionaryValue newDictValue = dictionaryDefinitionService.convertToDictValue(dictionaryById)
                 .orElse(null);
-        List<DictionaryValue> allDictValues = dictionaryValueService.getDictionaryByName(newDictValue.getName());
-        List<List<AbstractFieldValue>> fieldValues = allDictValues.stream().map(dv -> dv.getFieldValues()).collect(Collectors.toList());
+        List<DictionaryValue> allDictValues = dictionaryValueService.getDictionaryByName(newDictValue.getName(), dictionaryById);
+        List<List<AbstractFieldValue>> fieldValues = allDictValues.stream().
+                map(dv -> dv.getFieldValues())
+                .collect(Collectors.toList());
         List<String> fieldNames = allDictValues.stream()
                 .map(dv ->
                         dv.getFieldValues().stream()

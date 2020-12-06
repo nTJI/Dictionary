@@ -15,19 +15,13 @@ import lombok.Setter;
 import lombok.ToString;
 import lombok.experimental.Accessors;
 
-@Entity
-@Table(name = "dictionary_value")
 @Getter
 @Setter
 @ToString
 @Accessors(chain = true)
 @NoArgsConstructor
 public class DictionaryValue {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    @Column
     private String name;
-    @OneToMany(mappedBy = "dict")
     private List<AbstractFieldValue> fieldValues;
 }

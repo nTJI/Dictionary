@@ -16,6 +16,7 @@ import lombok.Setter;
 import lombok.ToString;
 import lombok.experimental.Accessors;
 import org.hibernate.annotations.GenericGenerator;
+import org.hibernate.cfg.NotYetImplementedException;
 
 @Getter
 @Setter
@@ -23,21 +24,24 @@ import org.hibernate.annotations.GenericGenerator;
 @ToString
 @NoArgsConstructor
 
-@Entity
-@Inheritance(strategy = InheritanceType.JOINED)
 public abstract class AbstractFieldValue<T> {
-    @Id
-    @GeneratedValue(generator = "uuid")
-    @GenericGenerator(name = "uuid", strategy = "uuid2")
-    @Column
-    private String id;
-    @Column
+    private Long id;
     private String name;
-    @ToString.Exclude
-    @ManyToOne(fetch = FetchType.LAZY)
     private DictionaryValue dict;
 
     public abstract T getValue();
 
     public abstract AbstractFieldValue<T> setValue(T value);
+
+    public static AbstractFieldValue getFieldValueForType(Object o) {
+        if (o instanceof String) {
+            return new StringFieldValue()
+                    .setValue((String) o);
+        } else if (o instanceof Number) {
+            return new NumberFieldValue()
+                    .setValue((Double) o);
+        } else {
+            throw new NotYetImplementedException();
+        }
+    }
 }

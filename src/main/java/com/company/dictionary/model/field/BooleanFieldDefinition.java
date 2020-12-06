@@ -2,19 +2,13 @@ package com.company.dictionary.model.field;
 
 import com.company.dictionary.model.DictionaryValue;
 import com.company.dictionary.model.value.AbstractFieldValue;
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import lombok.Data;
 import org.hibernate.cfg.NotYetImplementedException;
 
-@Entity
-@NoArgsConstructor
-@Getter
-@Setter
+@Data
 public class BooleanFieldDefinition extends AbstractFieldDefinition<Boolean> {
-    @Column
     private Boolean presetValue;
 
     @Override
@@ -32,5 +26,20 @@ public class BooleanFieldDefinition extends AbstractFieldDefinition<Boolean> {
     @Override
     public AbstractFieldValue convertToValue(DictionaryValue dictionaryValue) {
         throw new NotYetImplementedException();
+    }
+
+    @Override
+    public String getCreateSql() {
+        throw new NotYetImplementedException();
+    }
+
+    @Override
+    public boolean isSupportedByType(String type) {
+        return false;
+    }
+
+    @Override
+    public Boolean getResultForColumn(ResultSet rs, String name) throws SQLException {
+        return null;
     }
 }

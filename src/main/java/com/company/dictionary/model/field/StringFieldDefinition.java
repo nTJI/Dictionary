@@ -3,18 +3,14 @@ package com.company.dictionary.model.field;
 import com.company.dictionary.model.DictionaryValue;
 import com.company.dictionary.model.value.AbstractFieldValue;
 import com.company.dictionary.model.value.StringFieldValue;
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.function.Function;
+import lombok.Data;
+import lombok.SneakyThrows;
 
-@Entity
-@NoArgsConstructor
-@Getter
-@Setter
+@Data
 public class StringFieldDefinition extends AbstractFieldDefinition<String> {
-    @Column
     private String presetValue;
 
     @Override
@@ -34,5 +30,21 @@ public class StringFieldDefinition extends AbstractFieldDefinition<String> {
                 .setName(getName())
                 .setDict(dictionaryValue)
                 .setValue(getPresetValue());
+    }
+
+    @Override
+    public String getCreateSql() {
+        return " " + getName() + " varchar(255)";
+    }
+
+    @Override
+    public boolean isSupportedByType(String type) {
+        return "character varying".equals(type);
+    }
+
+    @Override
+    @SneakyThrows
+    public String getResultForColumn(ResultSet rs, String col) throws SQLException {
+        return rs.getString(col);
     }
 }

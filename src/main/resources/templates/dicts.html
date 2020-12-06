@@ -11,14 +11,13 @@
 <div>
     <table>
         <tr>
-            <th>ID</th>
             <th>Name</th>
         </tr>
         <tr th:each="dict : ${dicts}">
-            <td><a th:href="${'/dicts/' + dict.id}" th:text="${dict.id}">ID</a></td>
-            <td><a th:href="${'/dicts/' + dict.id}" th:text="${dict.name}">Name</a></td>
-            <td><a th:href="${'/dicts/' + dict.id + '/drop'}" th:text="[x]" class="drop">Name</a></td>
-
+<!--            <td><a th:href="${'/dicts/' + dict.id}" th:text="${dict.id}">ID</a></td>-->
+            <td><a th:href="${'/dicts/' + dict}" th:text="${dict}">Name</a></td>
+            <td><a th:href="${'/dicts/' + dict + '/drop'}" th:text="[x]" class="drop">Name</a></td>
+<!--            todo remove link-->
         </tr>
 
 

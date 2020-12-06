@@ -1,7 +1,5 @@
 package com.company.dictionary.model.value;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -9,16 +7,16 @@ import lombok.Setter;
 @NoArgsConstructor
 @Getter
 @Setter
-public class StringFieldValue extends AbstractFieldValue<String> {
-    private String value;
+public class NumberFieldValue extends AbstractFieldValue<Double> {
+    private Double value;
 
     @Override
-    public String getValue() {
+    public Double getValue() {
         return value;
     }
 
     @Override
-    public StringFieldValue setValue(String value) {
+    public NumberFieldValue setValue(Double value) {
         this.value = value;
         return this;
     }

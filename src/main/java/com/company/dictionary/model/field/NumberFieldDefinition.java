@@ -2,19 +2,15 @@ package com.company.dictionary.model.field;
 
 import com.company.dictionary.model.DictionaryValue;
 import com.company.dictionary.model.value.AbstractFieldValue;
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
-import org.hibernate.cfg.NotYetImplementedException;
+import com.company.dictionary.model.value.NumberFieldValue;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import lombok.Data;
+import lombok.experimental.Accessors;
 
-@Entity
-@NoArgsConstructor
-@Getter
-@Setter
+@Data
+@Accessors(chain = true)
 public class NumberFieldDefinition extends AbstractFieldDefinition<Double> {
-    @Column
     private Double presetValue;
 
     @Override
@@ -28,9 +24,26 @@ public class NumberFieldDefinition extends AbstractFieldDefinition<Double> {
         return this;
     }
 
-    //todo
     @Override
     public AbstractFieldValue convertToValue(DictionaryValue dictionaryValue) {
-        throw new NotYetImplementedException();
+        return new NumberFieldValue()
+                .setName(getName())
+                .setDict(dictionaryValue)
+                .setValue(getPresetValue());
+    }
+
+    @Override
+    public String getCreateSql() {
+        return " " + getName() + " int";
+    }
+
+    @Override
+    public boolean isSupportedByType(String type) {
+        return "integer".equals(type);
+    }
+
+    @Override
+    public Double getResultForColumn(ResultSet rs, String name) throws SQLException {
+        return rs.getDouble(name);
     }
 }

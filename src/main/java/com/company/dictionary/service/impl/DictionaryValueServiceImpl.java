@@ -2,66 +2,65 @@ package com.company.dictionary.service.impl;
 
 import com.company.dictionary.model.DictionaryDefinition;
 import com.company.dictionary.model.DictionaryValue;
-import com.company.dictionary.repository.DictionaryDefinitionRepository;
-import com.company.dictionary.repository.FieldDefinitionRepository;
-import com.company.dictionary.repository.value.DictionaryValueRepository;
-import com.company.dictionary.repository.value.FieldValueRepository;
+import com.company.dictionary.model.value.AbstractFieldValue;
 import com.company.dictionary.service.DictionaryValueService;
+import java.sql.SQLException;
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collector;
+import java.util.stream.Collectors;
+import lombok.SneakyThrows;
+import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.stereotype.Service;
 
 @Service
 public class DictionaryValueServiceImpl implements DictionaryValueService {
 
-    private final DictionaryDefinitionRepository dictionaryDefinitionRepository;
-    private final DictionaryValueRepository dictionaryValueRepository;
-    private final FieldDefinitionRepository fieldDefinitionRepository;
-    private final FieldValueRepository fieldValueRepository;
+    private final NamedParameterJdbcTemplate jdbcTemplate;
 
-    public DictionaryValueServiceImpl(DictionaryDefinitionRepository dictionaryDefinitionRepository,
-                                      DictionaryValueRepository dictionaryValueRepository,
-                                      FieldDefinitionRepository fieldDefinitionRepository,
-                                      FieldValueRepository fieldValueRepository) {
-        this.dictionaryDefinitionRepository = dictionaryDefinitionRepository;
-        this.dictionaryValueRepository = dictionaryValueRepository;
-        this.fieldDefinitionRepository = fieldDefinitionRepository;
-        this.fieldValueRepository = fieldValueRepository;
+    public DictionaryValueServiceImpl(NamedParameterJdbcTemplate jdbcTemplate) {
+        this.jdbcTemplate = jdbcTemplate;
     }
-
 
     @Override
     public void save(DictionaryValue dictionaryValue) {
-
-        dictionaryValueRepository.save(dictionaryValue);
-        fieldValueRepository.saveAll(dictionaryValue.getFieldValues());
-
-        System.out.println(1);
+        //todo
     }
 
     @Override
-    public List<DictionaryValue> getDictionaryByName(String name) {
-        return dictionaryValueRepository.findAllByName(name);
+    @SneakyThrows
+    public List<DictionaryValue> getDictionaryByName(String name, Optional<DictionaryDefinition> definition) {
+        String sql = "select * from " + name;
+        return jdbcTemplate.query(sql, Collections.emptyMap(), (rs, count) -> {
+            DictionaryValue dictionaryValue = new DictionaryValue();
+            Optional<List<AbstractFieldValue>> fieldValues = definition.map(def -> def.getFieldDefinitions()
+                    .stream()
+                    .map(
+                            field -> {
+                                try {
+
+                                    Object resultForColumn = field.getResultForColumn(rs, field.getName());
+                                    AbstractFieldValue fieldValue = AbstractFieldValue.getFieldValueForType(resultForColumn);
+                                    fieldValue.setName(field.getName());
+                                    fieldValue.setDict(dictionaryValue);
+                                    fieldValue.setId(rs.getLong("id")); //todo
+                                    return fieldValue;
+                                } catch (SQLException throwables) {
+                                    throw new RuntimeException(throwables);
+                                }
+                            })
+                    .collect(Collectors.toList())
+            );
+            dictionaryValue.setName(definition.isPresent() ? definition.get().getName() : null);
+            dictionaryValue.setId(rs.getLong("id")); //todo
+            fieldValues.ifPresent(dictionaryValue::setFieldValues);
+            return dictionaryValue;
+        });
     }
 
     @Override
     public boolean dropById(Long id) {
-        Optional<DictionaryValue> value = dictionaryValueRepository.findById(id);
-        value.ifPresent( dict -> {
-            dict.getFieldValues().forEach(
-                    fieldValueRepository::delete
-            );
-            dictionaryValueRepository.delete(dict);
-        });
-
-        //definition
-        Optional<DictionaryDefinition> definition = dictionaryDefinitionRepository.findById(id);
-        definition.ifPresent( dict -> {
-            dict.getFieldDefinitions().forEach(
-                    fieldDefinitionRepository::delete
-            );
-            dictionaryDefinitionRepository.delete(dict);
-        });
-        return true;
+        return false;
     }
 }
